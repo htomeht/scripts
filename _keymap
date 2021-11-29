@@ -1,0 +1,20 @@
+#! /bin/zsh
+# Script to manipulate the keymap.
+
+if [[ -z $DISPLAY ]]; then
+  bindkey '\e[1~' beginning-of-line
+  bindkey '\e[4~' end-of-line
+  bindkey '\e[3~' delete-char
+  bindkey '\e[H' beginning-of-line
+  bindkey '\e[F' end-of-line
+else
+  xmodmap ~/.keymap
+
+  bindkey '\e[1~' beginning-of-line
+  bindkey '\e[4~' end-of-line
+  bindkey '\e[3~' delete-char
+  bindkey '\e[H' beginning-of-line
+  bindkey '\e[F' end-of-line
+
+  /usr/bin/numlockx on
+fi

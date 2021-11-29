@@ -1,0 +1,14 @@
+#! /bin/bash
+
+swapoff /dev/loop1
+
+losetup -e AES256 -K /etc/keys/swap2key.gpg -o @32256 -s 1003451904 \
+/dev/loop6 /dev/sda
+
+swapon /dev/loop6
+
+losetup -e AES256 -K /etc/keys/seckey.gpg -o 1003484160 -s 50001477120 \
+/dev/loop7 /dev/sda
+
+mount -t ext3 /dev/loop7 /.secure
+

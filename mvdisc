@@ -1,0 +1,8 @@
+#! /bin/bash
+
+group='the\ rasmus'
+album='dead\ letters'
+
+for x in `find`
+do mv $x ${x::2}$group_-_$album_-_${x:2:3}-${x:4:100} 
+done

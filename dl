@@ -1,0 +1,1 @@
+wget -nc -P  ~/download/images/ `ratpoison -c getsel`

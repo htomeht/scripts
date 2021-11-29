@@ -1,0 +1,6 @@
+#! /bin/zsh
+losetup -e AES256 -K /dev/hdc -G /home/gabriel/.gnupg -o 8192 /dev/loop11 /dev/hdc
+mount -t iso9660 /dev/loop11 /mnt/dvd
+sudo -u gabriel xine dvd:/mnt/dvd
+umount /mnt/dvd
+losetup -d /dev/loop11

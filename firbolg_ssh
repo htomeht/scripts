@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# Firewall Script SSH operations
+
+IPT="/sbin/iptables"
+
+case "$1" in
+  start)
+    $IPT -A INPUT -p tcp --dport 22 --sport 1024:65535 -m state --state NEW -j ACCEPT
+    ;;
+  stop)
+    $IPT -D INPUT -p tcp --dport 22 --sport 1024:65535 -m state --state NEW -j ACCEPT
+    ;;
+esac

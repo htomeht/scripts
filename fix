@@ -1,0 +1,4 @@
+#! /bin/zsh
+
+rename 'y/ /_/' *
+rename 'y/A-ZÅÄÖ/a-zåäö/' *

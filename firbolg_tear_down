@@ -1,0 +1,13 @@
+#!/bin/sh
+IPT="/sbin/iptables"
+
+# Clean up all rules
+for table in mangle nat filter; do
+   $IPT -t $table -F
+   $IPT -t $table -X
+done
+
+# Allow everything, dont let this happen man.
+$IPT --policy INPUT   ACCEPT
+$IPT --policy OUTPUT  ACCEPT
+$IPT --policy FORWARD ACCEPT

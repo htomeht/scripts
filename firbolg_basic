@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# Firewall Script Basic operations
+
+IPT="/sbin/iptables"
+EXT_IF="eth0"
+EXT_IP="85.229.138.232"
+
+# Set the default filter table policy
+# It starts out very restrictive
+# Secure defaults 
+# Output is opened when all other rules have been passed.
+$IPT --policy INPUT   DROP
+$IPT --policy OUTPUT   DROP
+$IPT --policy FORWARD DROP
+
+# Flushing tables and deleting user define tables
+for table in mangle nat filter; do
+   $IPT -t $table -F
+   $IPT -t $table -X
+done
+
+# Unlimited traffic on the loopback interface
+# Do immediately in case of firewall script errors!
+$IPT -A INPUT  -i lo -j ACCEPT
+$IPT -A OUTPUT -o lo -j ACCEPT
+
+# Catch and log spoof attemps
+$IPT -A INPUT -i $EXT_IF -s $EXT_IP -j LOG --log-prefix "FIRBOLG: Spoofing -- " 
+$IPT -A INPUT -i $EXT_IF -s $EXT_IP -j DROP
+
+# Using Connection State to By-pass Rule Checking
+# Main Rule
+$IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow incoming bittorent client to connect to ports
+# $IPT -A INPUT -p tcp --dport 6969 -m state --state NEW -j ACCEPT
+$IPT -A INPUT -p tcp --dport 13999 -m state --state NEW -j ACCEPT
+
+# Log everything that doesn't pass.
+#$IPT -A INPUT -j LOG --log-prefix "FIRBOLG: Dropped INPUT -- "
+#$IPT -A FORWARD -j LOG --log-prefix "FIRBOLG: Dropped FORWARD --  "
+
+# This basically allows everything to get out of the server
+# Unless it has been blocked by the rules
+$IPT --policy OUTPUT  ACCEPT 

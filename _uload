@@ -1,0 +1,14 @@
+#! /bin/bash
+
+umount /.secure
+
+losetup -d /dev/loop7
+
+swapoff /dev/loop6
+
+losetup -d /dev/loop6
+
+swapon /dev/loop1
+
+
+

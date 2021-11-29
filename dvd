@@ -1,0 +1,4 @@
+#mplayer file://$1
+sudo mount -o loop $1 /mnt/dvd
+xine dvd:/mnt/dvd
+sudo umount /mnt/dvd

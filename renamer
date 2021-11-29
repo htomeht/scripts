@@ -1,0 +1,6 @@
+#! /bin/bash
+
+rename 's/(\d\d)/-\ $1\ -/' *
+rename 's/((?:\w|å|ä|ö)+)/\u\L$1/g' * stor bokstav i ord
+rename 's/(\..+$)/\L$1/' * liten bokstav i filändelse
+

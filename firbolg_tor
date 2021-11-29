@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Firewall Script SSH operations
+
+IPT="/sbin/iptables"
+
+case "$1" in
+  start)
+    $IPT -A INPUT -p tcp --dport 9050 -j ACCEPT
+    $IPT -A INPUT -p tcp --dport 8118 -j ACCEPT
+    ;;
+  stop)
+    $IPT -D INPUT -p tcp --dport 9050 -j ACCEPT
+    $IPT -D INPUT -p tcp --dport 8118 -j ACCEPT
+    ;;
+esac
+ 
+

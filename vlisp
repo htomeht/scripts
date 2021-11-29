@@ -1,0 +1,5 @@
+# /bin/sh
+
+# Skriv ett script som med screen skapar en delad screen mellan vim och clisp.
+
+perl $HOME/.vim/VIlisp-2.3/funnel.pl $HOME/.lisp-pipe.lisp gcl

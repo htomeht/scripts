@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for x in {a..z} å ä ö
+do mv $x* /home/gabriel/audio/music/$x/
+done

@@ -1,0 +1,3 @@
+#! /bin/zsh
+umount /mnt/dvd
+losetup -d /dev/loop15

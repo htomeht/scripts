@@ -1,0 +1,116 @@
+#!/bin/sh
+#
+# Shell script to copy JPEG files from the Olympus C-410L
+# camera to the local directory. In the process it renames them
+# to their date and time that they were taken.
+#
+
+##########################################################################
+# mju410_get() - get images from camera directory
+##########################################################################
+mju410_get() {
+photonum=1
+echo "Copying `ls -1 $IMAGEDIR/*.jpg | grep -c .` files..."
+
+for f in $IMAGEDIR/*.jpg
+do
+
+        # temp name of photo being copied
+        tempname=`basename $f`
+
+        # copy the image from the camera...
+        cp $f $tempname
+
+        # print the photo number
+        printf "%3d - " $photonum
+        photonum=`echo "$photonum + 1" | bc`
+
+        # rename it to it's date & time
+        /usr/bin/jhead -n%Y%m%d_%H%M%S $tempname
+        sync
+done
+sync
+}
+
+##########################################################################
+# mju410_delete() - delete all images from camera directory
+##########################################################################
+mju410_delete() {
+photonum=1
+echo "Deleting `ls -1 $IMAGEDIR/*.jpg | grep -c .` files..."
+
+for f in $IMAGEDIR/*.jpg
+do
+
+        # temp name of photo being deleted
+        tempname=`basename $f`
+
+        # print the photo number
+        printf "%3d - deleting %s..." $photonum $tempname
+        photonum=`echo "$photonum + 1" | bc`
+
+        # rename it to it's date & time
+        rm $f
+        echo "done"
+
+done
+printf "Syncing filesystem..."
+sync
+printf "done\n"
+}
+
+##########################################################################
+# mju410_rotate() - rotate images in current directory
+##########################################################################
+mju410_rotate() {
+degrees=$2
+shift 2
+case $degrees in
+        90|180|270) break
+                ;;
+        *)      echo "Invalid degrees for rotation, should be 90, 180 or 270."
+                exit
+                ;;
+esac
+
+for f in $*
+do
+        if [ -f $f ]
+        then
+                printf "Rotating file $f $degrees degrees..."
+                jpegtran -rotate $degrees -copy all $f > rotated.$f
+                mv rotated.$f $f
+                echo "done"
+        fi
+done
+}
+
+##########################################################################
+# mju410_help() - basic help
+##########################################################################
+mju410_help() {
+echo "Usage:"
+echo "      mju410 -delete"
+echo "      mju410 -get"
+echo "      mju410 -help"
+echo "      mju410 -rotate 90|180|270 [filenames...]"
+echo ""
+echo "   -delete     delete ALL JPEG files in the camera."
+echo "   -get        copy all JPEG files in the camera to the current"
+echo "               working directory and naming them based upon the"
+echo "               date & time they were taken."
+echo "   -help       You are looking at it."
+echo "   -rotate     rotate the JPEG files given on the command line"
+echo "               by 90|180|270 degrees."
+}
+
+##########################################################################
+# main() - main start of script...
+##########################################################################
+IMAGEDIR=/mnt/camera/dcim/100olymp
+case $1 in
+        -g*) mju410_get ;;
+        -d*) mju410_delete ;;
+        -r*) mju410_rotate $* ;;
+        *)   mju410_help
+esac

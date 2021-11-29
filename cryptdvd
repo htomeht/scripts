@@ -1,0 +1,18 @@
+#!/bin/bash
+
+CRDIR='.'
+#IMAGE='image.iso'
+#
+# Create key area
+#
+yes "" | dd of=../crypt.iso bs=512 count=16
+#
+# Create key and put it into the keyarea.
+#
+head -c 2925 /dev/random | uuencode -m - | head -n 66 | tail -n 65 | gpg -e -r Crypt | dd of=../crypt.iso conv=notrunc
+# 
+# make isoimage 
+#
+mkisofs -dvd-video -r $CRDIR | aespipe -e aes256 -w 10 -K ../crypt.iso -O 16 >>../crypt.iso
+
+mv ../crypt.iso .
