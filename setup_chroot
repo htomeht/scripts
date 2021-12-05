@@ -1,0 +1,24 @@
+ #!/sbin/runscript
+ 
+depend() {
+   need localmount
+   need bootmisc
+ }
+ 
+start() {
+     ebegin "Mounting chroot directories"
+     mount -o bind /dev /var/chroot/dev > /dev/null &
+     mount -t proc none /var/chroot/proc > /dev/null &
+     mount -o bind /sys /var/chroot/sys > /dev/null &
+     mount -o bind /tmp /var/chroot/tmp > /dev/null &
+     eend $? "An error occurred while mounting chroot directories"
+}
+ 
+stop() {
+     ebegin "Unmounting chroot directories"
+     umount -f /var/chroot/dev > /dev/null &
+     umount -f /var/chroot/proc > /dev/null &
+     umount -f /var/chroot/sys > /dev/null &
+     umount -f /var/chroot/tmp > /dev/null &
+     eend $? "An error occurred while unmounting chroot directories"
+ }

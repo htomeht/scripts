@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd "`dirname $(realpath "$0")`"
+exec ./updater/19/updater

@@ -1,0 +1,11 @@
+#!/bin/sh
+# Uses the "bc" (basic calculator) function to allow
+# easier command line math.
+# example: s '1413513251/(60*60*24*365)'
+# Original script by Dave Taylor.
+
+bc -l << EOF
+scale=10
+$@
+quit
+EOF

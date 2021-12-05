@@ -1,0 +1,50 @@
+#! /bin/bash
+
+# PID file
+PIDFILE="/tmp/rdw.pid"
+
+# Paths
+WATCHDIR="/home/gabriel/download"
+TORRENTS="/home/gabriel/download/torrents"
+
+# Programs
+INOTIFY="/usr/bin/inotifywait"
+MV="/bin/mv"
+NAUGHTY="/usr/bin/libnotify-notify-send"
+
+function start {
+  if [ -e $PIDFILE ]; then # A process is running?
+    echo "Process running? A pidfile exists at " "`cat $PIDFILE`"
+    exit 
+  fi
+  echo $$ > $PIDFILE
+  $INOTIFY -m $WATCHDIR -e create -e moved_to | 
+    while read path action file; do
+      if [[ "$file" == *".torrent" ]]; then 
+        if [[ -e "$path/$file" ]]; then
+          $NAUGHTY "RDW is Moving '$file' to '$TORRENTS'"
+          $MV "$path/$file" $TORRENTS
+        fi
+      fi
+    done
+}
+
+function stop {
+  if [ -e $PIDFILE ]; then # A process is running?
+    kill `cat $PIDFILE`
+    rm $PIDFILE
+  fi
+  exit 0
+}
+
+if [ "$#" -gt 0 ]; then
+  case $1 in
+    start)
+      start
+      stop
+      ;;
+    stop)
+      stop
+      ;;
+  esac
+fi

@@ -1,0 +1,2 @@
+#! /bin/sh
+pacmd set-card-profile 1 output:analog-stereo+input:analog-stereo

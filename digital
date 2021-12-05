@@ -1,0 +1,2 @@
+#! /bin/sh
+pacmd set-card-profile 1 output:iec958-stereo+input:analog-stereo
