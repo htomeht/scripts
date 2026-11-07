@@ -1,0 +1,9 @@
+[Unit]
+Description="Monitor the $user/download/firmware.zip file for changes.
+
+[Path]
+PathExists=/home/gabriel/download/firmware.zip
+Unit=firmware-monitor.service
+
+[Install]
+WantedBy=multi-user.target

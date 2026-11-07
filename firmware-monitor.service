@@ -1,0 +1,5 @@
+[Unit]
+Description="Move firmware from download to tmp"
+
+[Service]
+ExecStart=/home/gabriel/bin/mv-firmware.sh
